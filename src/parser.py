@@ -33,7 +33,7 @@ print(title)
 print(description)
 
 table = soup.find(class_="table-bordered").find_all("tr")
-iteration_count = int(len(table)) - 1
+iteration_count = int(len(table))
 count = 1
 print(f"Всего итераций: {iteration_count}")
 
