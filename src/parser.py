@@ -1,24 +1,27 @@
 #!/usr/bin/env python
 
+"""System module."""
+import sys
 import random
 from time import sleep
 import requests
 from bs4 import BeautifulSoup
 
-url = "http://ski66.ru/app/"
-url_descript = "http://ski66.ru/app/cal"
+URL = "http://ski66.ru/app/"
+URL_DESCRIPT = "http://ski66.ru/app/cal"
 
 headers = {
-    "Accept": "*/*",
-    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:101.0) Gecko/20100101 Firefox/101.0",
-    "Connection": "keep-alive",
-    "Upgrade-Insecure-Requests": "1"
+    "Accept": '*/*',
+    "User-Agent": \
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:101.0) Gecko/20100101 Firefox/101.0',
+    "Connection": 'keep-alive',
+    "Upgrade-Insecure-Requests": '1'
 }
 
-req = requests.get(url, headers=headers)
+req = requests.get(URL, headers=headers)
 src = req.text
 
-with open("data/index.html", "w") as file:
+with open("data/index.html", "w", encoding="utf-8") as file:
     file.write(src)
 
 # with open("index.html", encoding="utf-8") as file:
@@ -26,15 +29,15 @@ with open("data/index.html", "w") as file:
 
 soup = BeautifulSoup(src.replace("\n", " "), "lxml")
 
-title = soup.title.text
-description = soup.find("meta", attrs={'name': 'Description'})["content"]
+# title = soup.title.text
+# DESCRIPTION = soup.find("meta", attrs={'name': 'Description'})["content"]
 
-print(title)
-print(description)
+# print(title)
+# print(DESCRIPTION)
 
 table = soup.find(class_="table-bordered").find_all("tr")
 iteration_count = int(len(table))
-count = 1
+COUNT = 1
 print(f"Всего итераций: {iteration_count}")
 
 headers['X-Requested-With'] = 'XMLHttpRequest'
@@ -51,28 +54,29 @@ for row in table:
         distances = tds[2].text.strip()
         sity = tds[3].text.strip()
         mode = tds[4].text.strip()
-        req = requests.post(url_descript, headers=headers, data=[('descr_id', data_id)])
+        req = requests.post(URL_DESCRIPT, headers=headers, data=[('descr_id', data_id)])
         # with open(f"data/get-descr-{data_id}.html", encoding="utf-8") as file:
             # src = file.read().replace("\n", " ")
         src = req.text
         with open(f"data/{data_id}-descr.html", "w", encoding="utf-8") as file:
-            file.write(src)             
+            file.write(src)
         soup = BeautifulSoup(src.replace("\n", " "), "lxml")
         rdesc = soup.find_all(["h4", "a"])
-        description = ""
+        DESCRIPTION = ''
         for item in rdesc:
             if item.find() is not None:
-                description += f"{item.text.strip()}\n"
+                DESCRIPTION += f"{item.text.strip()}\n"
             elif 'http' not in item.text:
-                description += f"<a href=\"{item.get('href')}\">{item.text.strip()}</a>\n"
+                DESCRIPTION += f"<a href=\"{item.get('href')}\">{item.text.strip()}</a>\n"
 
         with open(f"data/{data_id}-{date}-descr.txt", "a", encoding="utf-8") as file:
             file.write(f"{date} | {descdescript} | {distances} | {sity} | {mode}\n")
-            file.write(description)
+            file.write(DESCRIPTION)
 
-        print(f"# Итерация {count}. {descdescript} записан...")
+        print(f"# Итерация {COUNT}. {descdescript} записан...")
         sleep(random.randrange(2, 4))
 
-    count += 1
+    COUNT += 1
     iteration_count = iteration_count - 1
     print(f"Осталось итераций: {iteration_count}")
+sys.exit(0)
