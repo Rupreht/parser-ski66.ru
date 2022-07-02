@@ -1,4 +1,5 @@
 # parser for site ski66.ru
+
 Sports event parser
 
 ## Launching ;-)
@@ -6,4 +7,6 @@ Sports event parser
 ```sh
 pip install -U setuptools pip
 pip install -r requirements.txt
+
+echo TOKEN_BOT=.... >> .env
 ```
