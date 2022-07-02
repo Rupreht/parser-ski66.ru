@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 
-"""System module."""
+"""System modules."""
 import sys
-import random
 from time import sleep
+import random
+
+# Dependent modules.
 import requests
 from bs4 import BeautifulSoup
 
