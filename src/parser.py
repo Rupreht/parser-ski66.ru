@@ -4,6 +4,7 @@
 import sys
 from time import sleep
 import random
+from datetime import datetime
 
 # Dependent modules.
 import requests
@@ -26,8 +27,8 @@ src = req.text
 with open("data/index.html", "w", encoding="utf-8") as file:
     file.write(src)
 
-# with open("index.html", encoding="utf-8") as file:
-    # src = file.read()
+# with open("data/index.html", encoding="utf-8") as file:
+#     src = file.read()
 
 soup = BeautifulSoup(src.replace("\n", " "), "lxml")
 
@@ -52,16 +53,12 @@ for row in table:
         tds = row.find_all("td")
         date = tds[0].get_text("|").replace(" ", "").replace("|", " ")
         data_id = tds[1]["data-id"]
-        descdescript = tds[1].text.strip()
+        event_name = descdescript = tds[1].text.strip()
         distances = tds[2].text.strip()
         sity = tds[3].text.strip()
         mode = tds[4].text.strip()
         req = requests.post(URL_DESCRIPT, headers=headers, data=[('descr_id', data_id)])
-        # with open(f"data/get-descr-{data_id}.html", encoding="utf-8") as file:
-            # src = file.read().replace("\n", " ")
         src = req.text
-        with open(f"data/{data_id}-descr.html", "w", encoding="utf-8") as file:
-            file.write(src)
         soup = BeautifulSoup(src.replace("\n", " "), "lxml")
         rdesc = soup.find_all(["h4", "a"])
         DESCRIPTION = ''
@@ -69,10 +66,18 @@ for row in table:
             if item.find() is not None:
                 DESCRIPTION += f"{item.text.strip()}\n"
             elif 'http' not in item.text:
-                DESCRIPTION += f"<a href=\"{item.get('href')}\">{item.text.strip()}</a>\n"
+                DESCRIPTION += f"{item.text.strip()} - {item.get('href')}\n"
 
-        with open(f"data/{data_id}-{date}-descr.txt", "a", encoding="utf-8") as file:
-            file.write(f"{date} | {descdescript} | {distances} | {sity} | {mode}\n")
+        rep = [",", " ", "-", "'"]
+        for item in rep:
+            if item in event_name:
+                event_name = event_name.replace(item, "_")
+
+        print(date)
+        date_time = datetime.strptime(date.split()[1].strip("-"), '%d-%m-%Y')
+        fdate = date_time.strftime('%Y-%m-%d')
+        with open(f"data/{fdate}-{data_id}-{event_name}-descr.txt", "w", encoding="utf-8") as file:
+            file.write(f"{date} | {descdescript} | {distances} | {sity} | {mode}\n\n")
             file.write(DESCRIPTION)
 
         print(f"# Итерация {COUNT}. {descdescript} записан...")
