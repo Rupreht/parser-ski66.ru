@@ -12,6 +12,9 @@ from os.path import exists
 # Dependent modules.
 import requests
 from bs4 import BeautifulSoup
+from lib.RemoteTypograf import RemoteTypograf
+
+typograf = RemoteTypograf(attr={"rm_tab": 1})
 
 def get_events(to_log=False) -> dict:
     """ Get Events """
@@ -28,7 +31,7 @@ def get_events(to_log=False) -> dict:
     url_descript = "http://ski66.ru/app/cal"
     file_events_dict = "data/events_dict.json"
     rep = [",", " ", "-", "'"]
-    emum_msg_dict = {
+    addon_value_dict = {
         "Описание:": "descriptions",
         "Протоколы:": "protocols",
         "Фото:": "photos",
@@ -82,34 +85,17 @@ def get_events(to_log=False) -> dict:
             if data_id in events_dict:
                 continue
 
-            # Mining a values:
-            # Описание:
-            # Контакты:
-            # Протоколы:
-            # Фото:
-            # Впечатления:
+            # Mining a values: "Описание:" "Контакты:" "Протоколы:" "Фото:" "Впечатления:"
             req = requests.post(url_descript, headers=headers, data=[('descr_id', data_id)])
             soup = BeautifulSoup(req.text.replace("\n", " "), "lxml")
             rdesc = soup.find_all(["h4", "a"])
             fdate = datetime.strptime(date.split()[1].strip("-"), '%d-%m-%Y').strftime('%Y-%m-%d')
 
-            description = ''
-
-            events_dict[data_id] = {
-                "description": descdescript,
+            new_object_dict = {
+                "description": typograf.processText(descdescript),
                 "src_date": date,
-                "distances": distances,
-                "sity": sity,
-                "mode": mode,
-                "date": fdate,
-                "forward": False
-            }
-
-            fresh_events_dict[data_id] = {
-                "description": descdescript,
-                "src_date": date,
-                "distances": distances,
-                "sity": sity,
+                "distances": typograf.processText(distances),
+                "sity": typograf.processText(sity),
                 "mode": mode,
                 "date": fdate,
                 "forward": False
@@ -117,25 +103,24 @@ def get_events(to_log=False) -> dict:
 
             for item in rdesc:
                 if item.find() is not None:
-                    description += f"{item.text.strip()}\n"
-                    p_key = emum_msg_dict[f"{item.text.strip()}"]
+                    if not item.text.strip():
+                        continue
+                    p_key = addon_value_dict[f"{item.text.strip()}"]
+                    new_object_dict[p_key] = {}
                 elif 'http' not in item.text:
-                    description += f"{item.text.strip()} - {item.get('href')}\n"
-                    events_dict[data_id][p_key] = {
-                        f"{item.text.strip()}": item.get('href')
-                    }
-                    fresh_events_dict[data_id][p_key] = {
-                        f"{item.text.strip()}": item.get('href')
-                    }
+                    new_object_dict[p_key].update({
+                        f"{item.text.strip()}": item.get('href').strip()
+                    })
+            fresh_events_dict[data_id] = new_object_dict
+            events_dict[data_id] = new_object_dict
 
             for item in rep:
                 if item in event_name:
                     event_name = event_name.replace(item, "_")
 
-            with open(f"data/{fdate}-{data_id}-{event_name}-descr.txt",
+            with open(f"data/{fdate}-{data_id}-{event_name}.json",
                 "w", encoding="utf-8") as file:
-                file.write(f"{date} | {descdescript} | {distances} | {sity} | {mode}\n\n")
-                file.write(description)
+                json.dump(events_dict[data_id], file, indent=4, ensure_ascii=False)
 
             if to_log:
                 print(f"# Итерация {count}. {descdescript} записан...")
@@ -154,7 +139,7 @@ def get_events(to_log=False) -> dict:
 def main():
     """ Main """
     file_fresh_events_dict = "data/fresh_events_dict.json"
-    fresh_events_dict = get_events()
+    fresh_events_dict = get_events(True)
     _len = len(fresh_events_dict)
     if _len > 0:
         print("Find: ", _len)
