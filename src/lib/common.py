@@ -1,4 +1,4 @@
-""" Lib """
+""" Common defs """
 import urllib.parse
 
 def add_utm_tracking(url: str, params: dict) -> str:

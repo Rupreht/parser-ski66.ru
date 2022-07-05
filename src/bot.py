@@ -1,11 +1,12 @@
+""" TgBot """
 import json
 import asyncio
 import logging
+import aiogram.utils.markdown as fmt
 from os import getenv
 from typing import List
 from aiogram import Bot, Dispatcher, executor, types
-import aiogram.utils.markdown as fmt
-from lib.lib import add_utm_tracking
+from lib.common import add_utm_tracking
 
 # from aiogram.dispatcher.filters import Text
 # from aiofiles import os
@@ -31,7 +32,7 @@ def print_links_to_cols(array, text) -> str:
         if count % 2 == 0:
             text += fmt.text('', '\n')
         elif size != count:
-            text += ' \| '
+            text += fmt.escape_md('|')
         else:
             text += fmt.text('', '\n')
         count += 1
@@ -58,7 +59,8 @@ def get_fresh_events(pub=False) -> List:
         text = fmt.text(
             fmt.escape_md(fresh_events_dict[i]['src_date']),
             fmt.bold(fresh_events_dict[i]['description']), fmt.text('', '\n'),
-            fmt.bold('дистанция:'), fmt.escape_md(fresh_events_dict[i]['distances']), fmt.text('', '\n'),
+            fmt.bold('дистанция:'),
+                fmt.escape_md(fresh_events_dict[i]['distances']), fmt.text('', '\n'),
             fmt.bold('место:'), fmt.escape_md(fresh_events_dict[i]['sity']), fmt.text('', '\n'),
             fmt.bold('вид:'), fmt.escape_md(fresh_events_dict[i]['mode']), fmt.text('', '\n')
         )
@@ -121,21 +123,21 @@ async def start(message: types.Message):
 @dp.message_handler(commands='test')
 async def test(message: types.Message):
     """ Test sendMessage """
-    text = """суббота 09\-07\-2022
-*Роллерный триатлон \#RollerSkiTriathlon*
+    text = """суббота 09-07-2022
+*Роллерный триатлон #RollerSkiTriathlon*
 *дистанция:* 8км
 *место:* Екатеринбург, УСБ Динамо
 *вид:* Лыжные гонки
 
 *Протоколы:*
-[10\-07\-2021](https://myfinish.info/online.php?evid=3559)"""
-    await message.answer(text)
+[10-07-2021](https://myfinish.info/online.php?evid=3559)"""
+    await message.answer(fmt.escape_md(text))
 
 @dp.message_handler(commands='test2')
 async def test2(message: types.Message):
     """ Test sendMessage """
     text = """
-воскресенье 10\-07\-2022
+воскресенье 10-07-2022
 *Пробег "Егоршинская десятка"*
 *дистанция:* 10км, 5км, 2,5км, 1км
 *место:* Артемовский, лб Снежинка
@@ -144,7 +146,7 @@ async def test2(message: types.Message):
 *Описание:*
 [2022](https://yadi.sk/i/O4rYm_0DUv4Z4g)
 """
-    await message.answer(text)
+    await message.answer(fmt.escape_md(text))
 
 @dp.message_handler(commands='fresh_events')
 async def fresh_events(message: types.Message):

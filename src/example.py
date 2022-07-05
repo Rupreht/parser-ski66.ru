@@ -1,10 +1,11 @@
-from lib.RemoteTypograf import RemoteTypograf
+""" Example for Typograf """
+from lib.typograf import Typograf
 
-rt = RemoteTypograf(attr={"rm_tab": 1})
+rt = Typograf(attr={"rm_tab": 1})
 # rt.htmlEntities()
 # rt.br(1)
 # rt.p(1)
 # rt.nobr(3)
 print(
-    rt.processText('"Вы все еще кое-как верстаете в "Ворде"? - Тогда мы идем к вам!"')
+    rt.processtext('"Вы все еще кое-как верстаете в "Ворде"? - Тогда мы идем к вам!"')
     )

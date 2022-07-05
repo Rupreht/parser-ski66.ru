@@ -12,9 +12,9 @@ from os.path import exists
 # Dependent modules.
 import requests
 from bs4 import BeautifulSoup
-from lib.RemoteTypograf import RemoteTypograf
+from lib.typograf import Typograf
 
-typograf = RemoteTypograf(attr={"rm_tab": 1})
+typograf = Typograf(attr={"rm_tab": 1})
 
 def get_events(to_log=False) -> dict:
     """ Get Events """
@@ -92,10 +92,10 @@ def get_events(to_log=False) -> dict:
             fdate = datetime.strptime(date.split()[1].strip("-"), '%d-%m-%Y').strftime('%Y-%m-%d')
 
             new_object_dict = {
-                "description": typograf.processText(descdescript),
+                "description": typograf.processtext(descdescript),
                 "src_date": date,
-                "distances": typograf.processText(distances),
-                "sity": typograf.processText(sity),
+                "distances": typograf.processtext(distances),
+                "sity": typograf.processtext(sity),
                 "mode": mode,
                 "date": fdate,
                 "forward": False
