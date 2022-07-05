@@ -45,6 +45,13 @@ def get_fresh_events(pub=False) -> List:
     events = []
     # exception_mode = ['Бег по шоссе, трейлы', 'Легкая атлетика']
     exception_mode = []
+    events_dict = {
+        "descriptions": "Описание:",
+        "protocols": "Протоколы:",
+        "photos": "Фото:",
+        "impressions": "Впечатления:",
+        "contacts": "Контакты:"
+    }
 
     for i in fresh_events_dict:
         # skip a running events
@@ -65,35 +72,12 @@ def get_fresh_events(pub=False) -> List:
             fmt.bold('вид:'), fmt.escape_md(fresh_events_dict[i]['mode']), fmt.text('', '\n')
         )
 
-        if 'descriptions' in fresh_events_dict[i]:
-            if fresh_events_dict[i]['descriptions']:
-                text += fmt.text(fmt.text('', '\n'),
-                    fmt.bold('Описание:'), fmt.text('', '\n'))
-                text = print_links_to_cols(fresh_events_dict[i]['descriptions'], text)
-
-        if 'protocols' in fresh_events_dict[i]:
-            if fresh_events_dict[i]['protocols']:
-                text += fmt.text(fmt.text('', '\n'),
-                    fmt.bold('Протоколы:'), fmt.text('', '\n'))
-                text = print_links_to_cols(fresh_events_dict[i]['protocols'], text)
-
-        if 'photos' in fresh_events_dict[i]:
-            if fresh_events_dict[i]['photos']:
-                text += fmt.text(fmt.text('', '\n'),
-                    fmt.bold('Фото:'), fmt.text('', '\n'))
-                text = print_links_to_cols(fresh_events_dict[i]['photos'], text)
-
-        if 'impressions' in fresh_events_dict[i]:
-            if fresh_events_dict[i]['impressions']:
-                text += fmt.text(fmt.text('', '\n'),
-                    fmt.bold('Впечатления:'), fmt.text('', '\n'))
-                text = print_links_to_cols(fresh_events_dict[i]['impressions'], text)
-
-        if 'contacts' in fresh_events_dict[i]:
-            if fresh_events_dict[i]['contacts']:
-                text += fmt.text(fmt.text('', '\n'),
-                    fmt.bold('Контакты:'), fmt.text('', '\n'))
-                text = print_links_to_cols(fresh_events_dict[i]['contacts'], text)
+        for item in events_dict:
+            if item in fresh_events_dict[i]:
+                if fresh_events_dict[i][item]:
+                    text += fmt.text(fmt.text('', '\n'),
+                        fmt.bold(events_dict[item]), fmt.text('', '\n'))
+                    text = print_links_to_cols(fresh_events_dict[i][item], text)
 
         text += fmt.text(
             fmt.text('', '\n'),
