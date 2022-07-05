@@ -16,6 +16,19 @@ from lib.typograf import Typograf
 
 typograf = Typograf(attr={"rm_tab": 1})
 
+FILE_EVENTS_DICT = "data/events_dict.json"
+rep = [",", " ", "-", "'"]
+
+ADDON_VALUE_DICT = {
+    "Описание:": "descriptions",
+    "Протоколы:": "protocols",
+    "Фото:": "photos",
+    "Впечатления:": "impressions",
+    "Контакты:": "contacts"
+}
+
+fresh_events_dict = {}
+
 def get_events(to_log=False) -> dict:
     """ Get Events """
 
@@ -27,26 +40,13 @@ def get_events(to_log=False) -> dict:
         "Upgrade-Insecure-Requests": '1'
     }
 
-    url = "http://ski66.ru/app/"
-    url_descript = "http://ski66.ru/app/cal"
-    file_events_dict = "data/events_dict.json"
-    rep = [",", " ", "-", "'"]
-    addon_value_dict = {
-        "Описание:": "descriptions",
-        "Протоколы:": "protocols",
-        "Фото:": "photos",
-        "Впечатления:": "impressions",
-        "Контакты:": "contacts"
-    }
-
-    if exists(file_events_dict):
-        with open(file_events_dict, "r", encoding="utf-8") as file:
+    if exists(FILE_EVENTS_DICT):
+        with open(FILE_EVENTS_DICT, "r", encoding="utf-8") as file:
             events_dict = json.load(file)
     else:
         events_dict = {}
-    fresh_events_dict = {}
 
-    req = requests.get(url, headers=headers)
+    req = requests.get("http://ski66.ru/app/", headers=headers)
     with open("data/index.html", "w", encoding="utf-8") as file:
         file.write(req.text)
 
@@ -77,16 +77,13 @@ def get_events(to_log=False) -> dict:
             date = tds[0].get_text("|").replace(" ", "").replace("|", " ").replace("\n", "")
             data_id = tds[1]["data-id"]
             event_name = descdescript = re.sub(' +', ' ', tds[1].text.strip())
-            distances = tds[2].text.strip().replace(" км", "км")
-            distances = re.sub(' +', ' ', distances)
-            sity = tds[3].text.strip()
-            mode = tds[4].text.strip()
 
             if data_id in events_dict:
                 continue
 
             # Mining a values: "Описание:" "Контакты:" "Протоколы:" "Фото:" "Впечатления:"
-            req = requests.post(url_descript, headers=headers, data=[('descr_id', data_id)])
+            req = requests.post("http://ski66.ru/app/cal",
+                headers=headers, data=[('descr_id', data_id)])
             soup = BeautifulSoup(req.text.replace("\n", " "), "lxml")
             rdesc = soup.find_all(["h4", "a"])
             fdate = datetime.strptime(date.split()[1].strip("-"), '%d-%m-%Y').strftime('%Y-%m-%d')
@@ -94,9 +91,12 @@ def get_events(to_log=False) -> dict:
             new_object_dict = {
                 "description": typograf.processtext(descdescript),
                 "src_date": date,
-                "distances": typograf.processtext(distances),
-                "sity": typograf.processtext(sity),
-                "mode": mode,
+                "distances":
+                    typograf.processtext(
+                        re.sub(' +', ' ', tds[2].text.strip().replace(" км", "км"))
+                    ),
+                "sity": typograf.processtext(tds[3].text.strip()),
+                "mode": tds[4].text.strip(),
                 "date": fdate,
                 "forward": False
             }
@@ -105,7 +105,7 @@ def get_events(to_log=False) -> dict:
                 if item.find() is not None:
                     if not item.text.strip():
                         continue
-                    p_key = addon_value_dict[f"{item.text.strip()}"]
+                    p_key = ADDON_VALUE_DICT[f"{item.text.strip()}"]
                     new_object_dict[p_key] = {}
                 elif 'http' not in item.text:
                     new_object_dict[p_key].update({
@@ -123,7 +123,7 @@ def get_events(to_log=False) -> dict:
                 json.dump(events_dict[data_id], file, indent=4, ensure_ascii=False)
 
             if to_log:
-                print(f"# Итерация {count}. {descdescript} записан...")
+                print(f"# Итерация {count}. {new_object_dict['description']} записан...")
             sleep(random.randrange(2, 4))
 
         count += 1
@@ -131,7 +131,7 @@ def get_events(to_log=False) -> dict:
         if to_log:
             print(f"Осталось итераций: {iteration_count}")
 
-    with open(file_events_dict, "w", encoding="utf-8") as file:
+    with open(FILE_EVENTS_DICT, "w", encoding="utf-8") as file:
         json.dump(events_dict, file, indent=4, ensure_ascii=False)
 
     return fresh_events_dict
@@ -139,12 +139,12 @@ def get_events(to_log=False) -> dict:
 def main():
     """ Main """
     file_fresh_events_dict = "data/fresh_events_dict.json"
-    fresh_events_dict = get_events(True)
-    _len = len(fresh_events_dict)
+    fresh_events = get_events(True)
+    _len = len(fresh_events)
     if _len > 0:
         print("Find: ", _len)
         with open(file_fresh_events_dict, "w", encoding="utf-8") as file:
-            json.dump(fresh_events_dict, file, indent=4, ensure_ascii=False)
+            json.dump(fresh_events, file, indent=4, ensure_ascii=False)
 
 if __name__ == '__main__':
     main()

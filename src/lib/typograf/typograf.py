@@ -40,7 +40,7 @@ class Typograf:
     _parser = 0
     _encoding = 'UTF-8'
 
-    def __init__(self, encoding='UTF-8', attr={}) -> None:
+    def __init__(self, encoding='UTF-8', attr=None) -> None:
         self._encoding = encoding
 
         if "entity" in attr:
@@ -53,6 +53,40 @@ class Typograf:
             self._afterscan = 1
         if "parser" in attr:
             self._parser = 1
+
+    def htmlentities(self):
+        """htmlEntities"""
+        self._entity = 1
+
+    def xmlentities(self):
+        """xmlEntities"""
+        self._entity = 2
+
+    def mixedentities(self):
+        """mixedEntities"""
+        self._entity = 4
+
+    def noentities(self):
+        """noEntities"""
+        self._entity = 3
+
+    # def br(self, value):
+    #     if value:
+    #         self._useBr = 1
+    #     else:
+    #         self._useBr = 0
+
+    # def p(self, value):
+    #     if value:
+    #         self._useP = 1
+    #     else:
+    #         self._useP = 0
+
+    # def nobr(self, value):
+    #     if value:
+    #         self._maxNobr = value
+    #     else:
+    #         self._maxNobr = 0
 
     def processtext(self, text) -> str:
         """ Text processer """

@@ -2,9 +2,9 @@
 import json
 import asyncio
 import logging
-import aiogram.utils.markdown as fmt
 from os import getenv
 from typing import List
+import aiogram.utils.markdown as fmt
 from aiogram import Bot, Dispatcher, executor, types
 from lib.common import add_utm_tracking
 
@@ -45,7 +45,7 @@ def get_fresh_events(pub=False) -> List:
     events = []
     # exception_mode = ['Бег по шоссе, трейлы', 'Легкая атлетика']
     exception_mode = []
-    events_dict = {
+    events_name_dict = {
         "descriptions": "Описание:",
         "protocols": "Протоколы:",
         "photos": "Фото:",
@@ -72,12 +72,11 @@ def get_fresh_events(pub=False) -> List:
             fmt.bold('вид:'), fmt.escape_md(fresh_events_dict[i]['mode']), fmt.text('', '\n')
         )
 
-        for item in events_dict:
+        for item, name_ru in events_name_dict.items():
             if item in fresh_events_dict[i]:
-                if fresh_events_dict[i][item]:
-                    text += fmt.text(fmt.text('', '\n'),
-                        fmt.bold(events_dict[item]), fmt.text('', '\n'))
-                    text = print_links_to_cols(fresh_events_dict[i][item], text)
+                text += fmt.text(fmt.text('', '\n'),
+                    fmt.bold(name_ru), fmt.text('', '\n'))
+                text = print_links_to_cols(fresh_events_dict[i][item], text)
 
         text += fmt.text(
             fmt.text('', '\n'),
@@ -143,7 +142,7 @@ async def fresh_events(message: types.Message):
         await asyncio.sleep(2)
 
 @dp.message_handler(commands='pub_fresh_events')
-async def pub_fresh_events(message: types.Message):
+async def pub_fresh_events():
     """ Test sendMessage """
     for text in get_fresh_events(pub=True):
         # Post to channel "Спортивные события лыжников УрФО" https://t.me/SkiUral
