@@ -133,4 +133,10 @@ class Typograf:
         typografresponse = requests.post("https://www.artlebedev.ru/typograf/ajax.html",
             headers=_headers, data=data)
 
-        return str(json.loads(typografresponse.text)["typographed"])
+        try:
+            res = str(json.loads(typografresponse.text)["typographed"])
+        except JSONDecodeError:
+            res = text
+            pass
+
+        return res
