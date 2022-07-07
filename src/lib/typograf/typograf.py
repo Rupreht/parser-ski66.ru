@@ -135,7 +135,7 @@ class Typograf:
 
         try:
             res = str(json.loads(typografresponse.text)["typographed"])
-        except JSONDecodeError:
+        except:
             res = text
             pass
 
