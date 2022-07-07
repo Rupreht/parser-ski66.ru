@@ -91,11 +91,8 @@ def get_events(to_log=False) -> dict:
             new_object_dict = {
                 "description": typograf.processtext(descdescript),
                 "src_date": date,
-                "distances":
-                    typograf.processtext(
-                        re.sub(' +', ' ', tds[2].text.strip().replace(" км", "км"))
-                    ),
-                "sity": typograf.processtext(tds[3].text.strip()),
+                "distances": re.sub(' +', ' ', tds[2].text.strip().replace(" км", "км")),
+                "sity": tds[3].text.strip(),
                 "mode": tds[4].text.strip(),
                 "date": fdate,
                 "forward": False
