@@ -12,10 +12,12 @@ from lib.common import add_utm_tracking
 # from aiofiles import os
 
 bot = Bot(token=getenv('TOKEN_BOT'), parse_mode='MarkdownV2')
-dp = Dispatcher(bot)
+dispatcher = Dispatcher(bot)
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
+
+FILE_FRESH_EVENTS_DICT="data/fresh_events_dict.json"
 
 utm_params = {
     'utm_source': 'telegram',
@@ -38,9 +40,14 @@ def print_links_to_cols(array, text) -> str:
         count += 1
     return text
 
+def clean_fresh_events_dict() -> None:
+    """ Clear Fresh events """
+    with open(FILE_FRESH_EVENTS_DICT, "w", encoding="utf-8") as file:
+        json.dump({}, file)
+
 def get_fresh_events(pub=False) -> List:
     """ Get Fresh events """
-    with open("data/fresh_events_dict.json", "r", encoding="utf-8") as file:
+    with open(FILE_FRESH_EVENTS_DICT, "r", encoding="utf-8") as file:
         fresh_events_dict = json.load(file)
     events = []
     # exception_mode = ['Бег по шоссе, трейлы', 'Легкая атлетика']
@@ -99,40 +106,12 @@ start_buttons = ['/test', '/test2', '/fresh_events']
 keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
 keyboard.add(*start_buttons)
 
-@dp.message_handler(commands='start')
+@dispatcher.message_handler(commands='start')
 async def start(message: types.Message):
     """ Start bot """
     await message.answer('Test msg', reply_markup=keyboard)
 
-@dp.message_handler(commands='test')
-async def test(message: types.Message):
-    """ Test sendMessage """
-    text = """суббота 09-07-2022
-*Роллерный триатлон #RollerSkiTriathlon*
-*дистанция:* 8км
-*место:* Екатеринбург, УСБ Динамо
-*вид:* Лыжные гонки
-
-*Протоколы:*
-[10-07-2021](https://myfinish.info/online.php?evid=3559)"""
-    await message.answer(fmt.escape_md(text))
-
-@dp.message_handler(commands='test2')
-async def test2(message: types.Message):
-    """ Test sendMessage """
-    text = """
-воскресенье 10-07-2022
-*Пробег "Егоршинская десятка"*
-*дистанция:* 10км, 5км, 2,5км, 1км
-*место:* Артемовский, лб Снежинка
-*вид:* Бег по шоссе, трейлы
-
-*Описание:*
-[2022](https://yadi.sk/i/O4rYm_0DUv4Z4g)
-"""
-    await message.answer(fmt.escape_md(text))
-
-@dp.message_handler(commands='fresh_events')
+@dispatcher.message_handler(commands='fresh_events')
 async def fresh_events(message: types.Message):
     """ Test sendMessage """
     user_id = message.from_id
@@ -143,7 +122,7 @@ async def fresh_events(message: types.Message):
             reply_markup=keyboard)
         await asyncio.sleep(2)
 
-@dp.message_handler(commands='pub_fresh_events')
+@dispatcher.message_handler(commands='pub_fresh_events')
 async def pub_fresh_events():
     """ Test sendMessage """
     for text in get_fresh_events(pub=True):
@@ -151,18 +130,24 @@ async def pub_fresh_events():
         await bot.send_message(-1001511845683, text,
             disable_web_page_preview=True)
         await asyncio.sleep(1)
+    clean_fresh_events_dict()
 
+@dispatcher.message_handler(commands='clean_fresh_events')
+async def clean_fresh_events(message: types.Message):
+    """ Clean Fresh Events """
+    clean_fresh_events_dict()
+    await message.answer(fmt.escape_md('Clean Fresh Events'))
 
 async def cron_fresh_events():
     """ Test sendMessage """
     user_id = getenv("USER_ID")
     while True:
         for text in get_fresh_events():
-            print(text)
             await bot.send_message(user_id, text,
                 disable_web_page_preview=True, disable_notification=True)
             await asyncio.sleep(2)
-        await asyncio.sleep(3600)
+        clean_fresh_events_dict()
+        await asyncio.sleep(3600*3)
 
 def main() -> None:
     """ Main """
