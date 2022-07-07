@@ -73,7 +73,7 @@ def get_fresh_events(pub=False) -> List:
         )
 
         for item, name_ru in events_name_dict.items():
-            if not fresh_events_dict[i][item]:
+            if fresh_events_dict[i][item]:
                 text += fmt.text(fmt.text('', '\n'),
                     fmt.bold(name_ru), fmt.text('', '\n'))
                 text = print_links_to_cols(fresh_events_dict[i][item], text)
