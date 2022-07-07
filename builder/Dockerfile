@@ -10,8 +10,13 @@ RUN apt-get update && \
 	&& git clone https://github.com/Rupreht/parser-ski66.ru.git . \
 	&& mkdir data && chown app:app data \
 	&& pip install -U pip \
-	&& pip install -r requirements.txt
+	&& pip install -r requirements.txt \
+	&& crontab .crontab.file
+
+COPY entrypoint.sh /
+
+RUN chmod +x /entrypoint.sh
 
 USER app
 
-ENTRYPOINT ["python", "src/bot.py"]
+ENTRYPOINT ["/entrypoint.sh"]
