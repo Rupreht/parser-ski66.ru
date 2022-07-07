@@ -73,7 +73,7 @@ def get_fresh_events(pub=False) -> List:
         )
 
         for item, name_ru in events_name_dict.items():
-            if item in fresh_events_dict[i]:
+            if not fresh_events_dict[i][item]:
                 text += fmt.text(fmt.text('', '\n'),
                     fmt.bold(name_ru), fmt.text('', '\n'))
                 text = print_links_to_cols(fresh_events_dict[i][item], text)
@@ -95,12 +95,13 @@ def get_fresh_events(pub=False) -> List:
 
     return events
 
+start_buttons = ['/test', '/test2', '/fresh_events']
+keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
+keyboard.add(*start_buttons)
+
 @dp.message_handler(commands='start')
 async def start(message: types.Message):
     """ Start bot """
-    start_buttons = ['/test', '/test2', '/fresh_events']
-    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
-    keyboard.add(*start_buttons)
     await message.answer('Test msg', reply_markup=keyboard)
 
 @dp.message_handler(commands='test')
@@ -138,7 +139,8 @@ async def fresh_events(message: types.Message):
     for text in get_fresh_events():
         await bot.send_message(user_id, text,
             disable_web_page_preview=True,
-            disable_notification=True)
+            disable_notification=True,
+            reply_markup=keyboard)
         await asyncio.sleep(2)
 
 @dp.message_handler(commands='pub_fresh_events')
