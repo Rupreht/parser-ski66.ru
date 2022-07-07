@@ -32,7 +32,7 @@ def print_links_to_cols(array, text) -> str:
         if count % 2 == 0:
             text += fmt.text('', '\n')
         elif size != count:
-            text += fmt.escape_md('|')
+            text += fmt.escape_md(' | ')
         else:
             text += fmt.text('', '\n')
         count += 1
