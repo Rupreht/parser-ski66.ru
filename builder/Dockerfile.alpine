@@ -6,12 +6,17 @@ RUN set -eux; \
 	apk add --no-cache git \
 	&& addgroup --gid 1001 --system app \
 	&& adduser --shell /bin/false \
-		--disabled-password --uid 1001 --system app app \
+	--disabled-password --uid 1001 --system app app \
 	&& git clone https://github.com/Rupreht/parser-ski66.ru.git . \
 	&& mkdir data && chown app:app data \
-	&& pip install -U pip \
-	&& pip install -r requirements.txt
+        && pip install -U pip \
+	&& pip install -r requirements.txt \
+	&& ln -s /app/.crontab.file /etc/crontabs/app
+
+COPY entrypoint.sh /
+
+RUN chmod +x /entrypoint.sh
 
 USER app
 
-ENTRYPOINT ["python", "src/bot.py"]
+ENTRYPOINT ["/entrypoint.sh"]
