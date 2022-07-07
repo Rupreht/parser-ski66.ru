@@ -130,13 +130,12 @@ class Typograf:
 
         data = urllib.parse.urlencode(_data)
 
-        typografresponse = requests.post("https://www.artlebedev.ru/typograf/ajax.html",
+        response = requests.post("https://www.artlebedev.ru/typograf/ajax.html",
             headers=_headers, data=data)
 
         try:
-            res = str(json.loads(typografresponse.text)["typographed"])
-        except:
+            res = str(json.loads(response.text)["typographed"])
+        except ValueError:
             res = text
-            pass
 
         return res
