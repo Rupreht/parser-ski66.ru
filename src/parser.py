@@ -123,8 +123,8 @@ def get_events(to_log=False) -> dict:
                 json.dump(events_dict[data_id], file, indent=4, ensure_ascii=False)
 
             if to_log:
-                print(f"# Итерация {count}. {new_object_dict['description']} записан...")
-            sleep(random.randrange(2, 4))
+                print(f"# Итерация {count}. [{new_object_dict['description']}] записан...")
+            sleep(random.randrange(3, 6))
 
         count += 1
         iteration_count = iteration_count - 1
