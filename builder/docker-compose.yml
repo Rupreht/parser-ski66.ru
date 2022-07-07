@@ -12,4 +12,4 @@ services:
       - data:/app/data
 
 volumes:
-  sdata:
+  data:
