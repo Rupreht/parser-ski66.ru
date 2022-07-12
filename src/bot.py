@@ -156,8 +156,8 @@ async def async_main():
 
 def main() -> None:
     """ Main """
-    asyncio.run(async_main())
     executor.start_polling(dispatcher)
 
 if __name__ == '__main__':
+    asyncio.run(async_main())
     main()
