@@ -151,7 +151,7 @@ async def cron_fresh_events():
 
 def main() -> None:
     """ Main """
-    loop = asyncio.get_event_loop()
+    loop = asyncio.get_running_loop()
     loop.create_task(cron_fresh_events())
     executor.start_polling(dispatcher)
 
