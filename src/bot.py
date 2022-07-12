@@ -4,6 +4,7 @@ import asyncio
 import logging
 from os import getenv
 from typing import List
+from datetime import datetime
 import aiogram.utils.markdown as fmt
 from aiogram import Bot, Dispatcher, executor, types
 from lib.common import add_utm_tracking
@@ -141,6 +142,9 @@ async def clean_fresh_events(message: types.Message):
 async def cron_fresh_events():
     """ Test sendMessage """
     user_id = getenv("USER_ID")
+    start_strf = datetime.today().strftime("%A, %d. %B %Y %I:%M%p")
+    bot.send_message(user_id, f"{start_strf} Start CRON",
+                disable_web_page_preview=True, disable_notification=True)
     while True:
         for text in get_fresh_events():
             await bot.send_message(user_id, text,
