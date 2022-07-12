@@ -78,7 +78,7 @@ def get_events() -> dict:
                 if item in event_name:
                     event_name = event_name.replace(item, "_")
 
-            with open(f"data/{fdate}-{data_id}-{event_name}.json",
+            with open(f"data/{fdate}-{data_id}.json",
                 "w", encoding="utf-8") as file:
                 json.dump(events_dict[data_id], file, indent=4, ensure_ascii=False)
 
