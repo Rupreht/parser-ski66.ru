@@ -1,19 +1,12 @@
 # main.py
 
-import sqlite3
 from flask import Blueprint, render_template, request, url_for, flash, redirect
 from flask_login import login_required, current_user
 from sqlalchemy import null
-from werkzeug.exceptions import abort
 from .models import Post
 from . import db
 
 main = Blueprint('main', __name__)
-
-def get_db_connection():
-    conn = sqlite3.connect('database.db')
-    conn.row_factory = sqlite3.Row
-    return conn
 
 @main.route('/')
 def index():
@@ -22,7 +15,7 @@ def index():
 
 @main.route('/<int:post_id>')
 def post(post_id):
-    post = Post.query.filter_by(id=post_id).first()
+    post = Post.query.filter_by(id=post_id).first_or_404()
     return render_template('post.html', post=post)
 
 @main.route('/create', methods=('GET', 'POST'))
