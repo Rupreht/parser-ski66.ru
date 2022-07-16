@@ -61,7 +61,7 @@ def edit(id):
 @main.route('/<int:id>/delete', methods=('POST',))
 @login_required
 def delete(id):
-    post = db.session.get(Post, id)
+    post = Post.query.get_or_404(id)
     if current_user.id == post.ovner:
         db.session.delete(post)
         db.session.commit()
