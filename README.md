@@ -13,3 +13,11 @@ mkdir data
 ```sh
 echo TOKEN_BOT=.... >> .env
 ```
+
+## Flask
+
+```sh
+flask shell
+from app import db, create_app, models
+db.create_all(app=create_app())
+```
