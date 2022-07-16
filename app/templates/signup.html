@@ -33,6 +33,7 @@
             </div>
 
             <button class="button is-block is-info is-large is-fullwidth">Sign Up</button>
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
         </form>
     </div>
 </div>

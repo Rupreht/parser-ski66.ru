@@ -1,12 +1,16 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from flask_wtf.csrf import CSRFProtect
 
 # init SQLAlchemy so we can use it later in our models
 db = SQLAlchemy()
+csrf = CSRFProtect()
 
 def create_app():
     app = Flask(__name__)
+    csrf.init_app(app)
+
     app.config.from_prefixed_env()
     app.config['TIMEZONE'] = 'Asia/Yekaterinburg'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
