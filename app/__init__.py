@@ -12,9 +12,12 @@ def create_app():
     app = Flask(__name__)
     csrf.init_app(app)
 
+    if not os.getenv("SQLALCHEMY_DATABASE_URI"):
+        raise RuntimeError("SQLALCHEMY_DATABASE_URI is not set")
+
     app.config.from_prefixed_env()
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("SQLALCHEMY_DATABASE_URI")
     app.config['TIMEZONE'] = os.getenv("TZ")
 
     db.init_app(app)
