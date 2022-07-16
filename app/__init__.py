@@ -1,3 +1,4 @@
+import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
@@ -12,9 +13,9 @@ def create_app():
     csrf.init_app(app)
 
     app.config.from_prefixed_env()
-    app.config['TIMEZONE'] = 'Asia/Yekaterinburg'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
+    app.config['TIMEZONE'] = os.getenv("TZ")
 
     db.init_app(app)
 
