@@ -2,9 +2,11 @@
 
 """
 Parser for http://collc.narod.ru
+Insatll:
+    pip install fitz PyMuPDF
 """
 
-import re
+# import re
 from os.path import exists
 import requests
 import fitz
