@@ -3,7 +3,10 @@
 """
 Parser for http://collc.narod.ru
 Insatll:
-    pip install fitz PyMuPDF
+    step 1
+        pip install fitz
+    step 2
+        pip install PyMuPDF
 """
 
 # import re
