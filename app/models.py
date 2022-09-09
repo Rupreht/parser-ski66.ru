@@ -37,9 +37,6 @@ class Post(db.Model):
         self.content = content
         self.ovner = ovner
 
-        # if self.pub_date is None:
-        #     self.pub_date = datetime.now()
-
     def __str__(self):
         return '<Post %r>' % self.title
 
@@ -54,3 +51,6 @@ class Post(db.Model):
 
     def set_pub_date(self, pub_date):
         self.pub_date = datetime.fromisoformat(pub_date).replace(microsecond=0)
+
+    def set_sity(self, sity):
+        self.sity = sity

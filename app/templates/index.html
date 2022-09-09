@@ -2,16 +2,31 @@
 
 {% block content %}
     <h1>{% block title %} Welcome to FlaskBlog {% endblock %}</h1>
+
+    {% if prev_url %}<a href="{{ prev_url }}">Prev</a>{% endif %} |
+    {% if next_url %}<a href="{{ next_url }}">Next</a>{% endif %}
+
     {% for post in posts %}
         <a href="{{ url_for('main.post', post_id=post['id']) }}">
             <h2>{{ post['title'] }}</h2>
         </a>
-        <span class="badge badge-primary">{{ post.last_modified.strftime('%d %B %Y %H:%M') }}</span>
+
         {% if current_user.is_authenticated and current_user.id == post.ovner %}
         <a href="{{ url_for('main.edit', id=post['id']) }}">
             <span class="badge badge-warning">Edit</span>
         </a>
         {% endif %}
+
+        <span class="badge badge-primary">{{ post.pub_date.strftime('%d %B %Y') }}</span>
+
+        <span class="badge">{{ post['id'] }}</span>
+        <span class="badge">{{ post['sity'] }}</span>
+        <span class="badge">{{ post['forward'] }}</span>
+
         <hr>
     {% endfor %}
-{% endblock %}
+
+    {% if prev_url %}<a href="{{ prev_url }}">Prev</a>{% endif %} |
+    {% if next_url %}<a href="{{ next_url }}">Next</a>{% endif %}
+
+    {% endblock %}

@@ -32,7 +32,7 @@ def create_app():
 
     app.config.from_prefixed_env()
     app.config['ASSETS_DEBUG'] = True
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SQLALCHEMY_DATABASE_URI'] =  'sqlite:///' +\
         os.path.join(basedir, os.getenv('SQLALCHEMY_DATABASE'))
     app.config['TIMEZONE'] = os.getenv("TZ")

@@ -13,7 +13,9 @@
 
     <div class="form-group">
         <label for="title">Title</label>
-        <input type="text" name="title" placeholder="Post title"
+        <input type="text" disabled
+                class="form-control" value="{{ request.form['title'] or post['title'] }}">
+        <input type="hidden" name="title" placeholder="Post title"
                class="form-control"
                value="{{ request.form['title'] or post['title'] }}">
     </div>

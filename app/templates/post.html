@@ -2,9 +2,9 @@
 
 {% block content %}
     <h2>Title: {% block title %}{{ post['title'] }}{% endblock %}</h2>
-    Last Modified: <span class="badge badge-primary">{{ last_modified }}</span>
-    <div>Content: {{ post['content'] }}</div>
-    <div>Sity: {{ post['sity'] }}</div>
-    <div>pub_date: {{ post['pub_date'] }}</div>
-    <div>forward: {{ post['forward'] }}</div>
+    <b>Last Modified:</b> <span class="badge badge-primary">{{ last_modified }}</span>
+    <div><b>Content:</b> {{ post['content'] }}</div>
+    <div><b>Sity:</b> {{ post['sity'] }}</div>
+    <div><b>pub_date:</b> {{ post['pub_date'] }}</div>
+    <div><b>forward:</b> {{ post['forward'] }}</div>
 {% endblock %}

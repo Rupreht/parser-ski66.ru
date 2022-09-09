@@ -6,6 +6,13 @@ def add_utm_tracking(url: str, params: dict) -> str:
     result = {} | params
     url_obj = urllib.parse.urlparse(url)
     if url_obj.query:
-        query_dict = dict(x.split("=") for x in url_obj.query.split("&"))
-        result.update(query_dict)
+        try:
+            result.update(
+                dict(
+                    x.split('=') for x in url_obj.query.split('&')
+                    )
+                )
+        except ValueError:
+            result = params
+
     return str(url_obj._replace(query=urllib.parse.urlencode(result)).geturl())
