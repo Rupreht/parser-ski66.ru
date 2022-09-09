@@ -9,11 +9,7 @@ from os.path import exists
 # Dependent modules.
 import requests
 from bs4 import BeautifulSoup
-from lib.typograf import Typograf
-
-typograf = Typograf(attr={"rm_tab": 1})
-
-FILE_EVENTS_DICT = "data/events_dict.json"
+from app.models import Post
 
 ADDON_VALUE_DICT = {
     "Описание:": "descriptions",
@@ -37,10 +33,6 @@ def get_events() -> dict:
         "Upgrade-Insecure-Requests": '1'
     }
 
-    if exists(FILE_EVENTS_DICT):
-        with open(FILE_EVENTS_DICT, "r", encoding="utf-8") as file:
-            events_dict = json.load(file)
-
     soup = BeautifulSoup(
         requests.get("http://ski66.ru/app/", headers=headers).text, "lxml")
 
@@ -61,7 +53,7 @@ def get_events() -> dict:
                 continue
 
             new_object_dict = {
-                "description": typograf.processtext(descdescript),
+                "description": descdescript,
                 "src_date":    date,
                 "distances":   re.sub(' +', ' ', tds[2].text.strip().replace(" км", "км")),
                 "sity":        tds[3].text.strip(),
@@ -78,14 +70,10 @@ def get_events() -> dict:
                 if item in event_name:
                     event_name = event_name.replace(item, "_")
 
-            with open(f"data/{fdate}-{data_id}.json",
-                "w", encoding="utf-8") as file:
+            with open(f"data/{fdate}-{data_id}.json", "w", encoding="utf-8") as file:
                 json.dump(events_dict[data_id], file, indent=4, ensure_ascii=False)
 
             sleep(random.randrange(3, 6))
-
-    with open(FILE_EVENTS_DICT, "w", encoding="utf-8") as file:
-        json.dump(events_dict, file, indent=4, ensure_ascii=False)
 
     return fresh_events_dict
 
@@ -103,7 +91,7 @@ def get_add_info(data_id, new_object_dict):
         "Referer": "http://ski66.ru/app/",
     }
 
-    # Mining :) a values : "Описание:" "Контакты:" "Протоколы:" "Фото:" "Впечатления:"
+    # values : "Описание:" "Контакты:" "Протоколы:" "Фото:" "Впечатления:"
     req = requests.post("http://ski66.ru/app/cal",
         headers=headers, data=[('descr_id', data_id)])
     soup = BeautifulSoup(req.text.replace("\n", " "), "lxml")
@@ -121,12 +109,3 @@ def get_add_info(data_id, new_object_dict):
             })
 
     return new_object_dict
-
-def get_and_save_new_events() -> int:
-    """ Save new events """
-    fresh_events = get_events()
-    _len = len(fresh_events)
-    if _len > 0:
-        with open("data/fresh_events_dict.json", "w", encoding="utf-8") as file:
-            json.dump(fresh_events, file, indent=4, ensure_ascii=False)
-    return _len

@@ -21,3 +21,4 @@ build/
 *.egg-info/
 
 db.sqlite
+*.bak

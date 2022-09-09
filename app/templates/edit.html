@@ -5,6 +5,13 @@
 
 <form method="post">
     <div class="form-group">
+        <label for="pub_date">pub_date</label>
+        <input type="text" name="pub_date" placeholder="Post pub_date"
+               class="form-control"
+               value="{{ request.form['pub_date'] or post['pub_date'] }}">
+    </div>
+
+    <div class="form-group">
         <label for="title">Title</label>
         <input type="text" name="title" placeholder="Post title"
                class="form-control"

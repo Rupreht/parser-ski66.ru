@@ -1,10 +1,11 @@
-# main.py
+"""
+    main.py
+"""
 
 from flask import Blueprint, render_template, request, url_for, flash, redirect
 from flask_login import login_required, current_user
-from sqlalchemy import null
 from .models import Post
-from . import db
+from . import db, date_format
 
 main = Blueprint('main', __name__)
 
@@ -16,7 +17,7 @@ def index():
 @main.route('/<int:post_id>')
 def post(post_id):
     post = Post.query.filter_by(id=post_id).first_or_404()
-    return render_template('post.html', post=post)
+    return render_template('post.html', post=post, data_updated_time = post.last_modified.strftime(date_format))
 
 @main.route('/create', methods=('GET', 'POST'))
 @login_required
@@ -45,12 +46,14 @@ def edit(id):
         if request.method == 'POST':
             title = request.form['title']
             content = request.form['content']
+            pub_date = request.form['pub_date']
 
             if not title:
                 flash('Title is required!')
             else:
                 post.set_title(title)
                 post.set_content(content)
+                post.set_pub_date(pub_date)
                 db.session.commit()
                 return redirect(url_for('main.index'))
     else:
