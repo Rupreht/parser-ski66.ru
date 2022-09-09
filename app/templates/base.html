@@ -33,9 +33,9 @@
                 <li class="nav-item">
                     <a href="{{ url_for('auth.login') }}" class="nav-link">Login</a>
                 </li>
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a href="{{ url_for('auth.signup') }}" class="nav-link">Sign Up</a>
-                </li>
+                </li> -->
                 {% endif %}
                 {% if current_user.is_authenticated %}
                 <li class="nav-item">

@@ -25,9 +25,9 @@ class Post(db.Model):
     ovner         = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     forward       = db.Column(db.Boolean, unique=False, default=False, nullable=False)
     title         = db.Column(db.String(256), default='', nullable=False)
-    pub_date      = db.Column(db.DateTime, default=datetime.now().replace(microsecond=0))
-    last_modified = db.Column(db.DateTime, default=datetime.now().replace(microsecond=0),
-                              onupdate=datetime.now().replace(microsecond=0))
+    pub_date      = db.Column(db.DateTime, default=datetime.now())
+    last_modified = db.Column(db.DateTime, default=datetime.now(),
+                              onupdate=datetime.now())
     sity          = db.Column(db.String(80), default='', nullable=False)
     content       = db.Column(db.Text, default='', nullable=False)
     typograf      = db.Column(db.Text, default='', nullable=False)

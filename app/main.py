@@ -17,7 +17,7 @@ def index():
 @main.route('/<int:post_id>')
 def post(post_id):
     post = Post.query.filter_by(id=post_id).first_or_404()
-    return render_template('post.html', post=post, data_updated_time = post.last_modified.strftime(date_format))
+    return render_template('post.html', post=post, last_modified = post.last_modified.strftime(date_format))
 
 @main.route('/create', methods=('GET', 'POST'))
 @login_required

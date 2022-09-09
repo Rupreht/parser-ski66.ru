@@ -1,7 +1,10 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h2>{% block title %}{{ post['title'] }}{% endblock %}</h2>
-    <span class="badge badge-primary">{{ data_updated_time }}</span>
-    <p>{{ post['content'] }}</p>
+    <h2>Title: {% block title %}{{ post['title'] }}{% endblock %}</h2>
+    Last Modified: <span class="badge badge-primary">{{ last_modified }}</span>
+    <div>Content: {{ post['content'] }}</div>
+    <div>Sity: {{ post['sity'] }}</div>
+    <div>pub_date: {{ post['pub_date'] }}</div>
+    <div>forward: {{ post['forward'] }}</div>
 {% endblock %}
