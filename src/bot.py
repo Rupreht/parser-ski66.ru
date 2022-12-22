@@ -1,5 +1,5 @@
 from os import getenv
-import loggings
+import logging
 # from async_main import collect_data
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.dispatcher.filters import Text
