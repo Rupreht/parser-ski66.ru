@@ -6,7 +6,7 @@ from os import getenv
 # from async_main import collect_data
 from aiogram import Bot, Dispatcher, executor, types
 import aiogram.utils.markdown as fmt
-from lib.lib import add_utm_tracking
+from lib import add_utm_tracking
 
 # from aiogram.dispatcher.filters import Text
 # from aiofiles import os
@@ -32,7 +32,7 @@ def print_links_to_cols(array, text):
         if count % 2 == 0:
             text += fmt.text('', '\n')
         elif size != count:
-            text += ' \| '
+            text += r" \| "
         else:
             text += fmt.text('', '\n')
         count += 1
@@ -59,7 +59,8 @@ def get_fresh_events(pub=False):
         text = fmt.text(
             fmt.escape_md(fresh_events_dict[i]['src_date']),
             fmt.bold(fresh_events_dict[i]['description']), fmt.text('', '\n'),
-            fmt.bold('дистанция:'), fmt.escape_md(fresh_events_dict[i]['distances']), fmt.text('', '\n'),
+            fmt.bold('дистанция:'), fmt.escape_md(fresh_events_dict[i]['distances']),
+            fmt.text('', '\n'),
             fmt.bold('место:'), fmt.escape_md(fresh_events_dict[i]['sity']), fmt.text('', '\n'),
             fmt.bold('вид:'), fmt.escape_md(fresh_events_dict[i]['mode']), fmt.text('', '\n')
         )
@@ -122,7 +123,7 @@ async def start(message: types.Message):
 @dp.message_handler(commands='test')
 async def test(message: types.Message):
     """ Test sendMessage """
-    text = """суббота 09\-07\-2022
+    text = r"""суббота 09\-07\-2022
 *Роллерный триатлон \#RollerSkiTriathlon*
 *дистанция:* 8км
 *место:* Екатеринбург, УСБ Динамо
@@ -135,7 +136,7 @@ async def test(message: types.Message):
 @dp.message_handler(commands='test2')
 async def test2(message: types.Message):
     """ Test sendMessage """
-    text = """
+    text = r"""
 воскресенье 10\-07\-2022
 *Пробег "Егоршинская десятка"*
 *дистанция:* 10км, 5км, 2,5км, 1км
@@ -158,7 +159,7 @@ async def fresh_events(message: types.Message):
         await asyncio.sleep(2)
 
 @dp.message_handler(commands='pub_fresh_events')
-async def pub_fresh_events(message: types.Message):
+async def pub_fresh_events():
     """ Test sendMessage """
     for text in get_fresh_events(pub=True):
         # Post to channel "Спортивные события лыжников УрФО" https://t.me/SkiUral

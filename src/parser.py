@@ -12,7 +12,7 @@ from os.path import exists
 # Dependent modules.
 import requests
 from bs4 import BeautifulSoup
-from lib.RemoteTypograf import RemoteTypograf
+from lib.remotetypograf import remotetypograf
 
 typograf = RemoteTypograf(attr={"rm_tab": 1})
 

@@ -1,5 +1,12 @@
-""" Lib """
+r"""
+:mod:`add_utm_tracking`
+"""
+
 import urllib.parse
+
+__version__ = '0.0.1'
+__all__ = ["add_utm_tracking", "remotetypograf"]
+__author__ = 'Nikolay Ermolovich <git@rupreht.ru>'
 
 def add_utm_tracking(url: str, params: dict) -> str:
     """ Add UTM for tracking """

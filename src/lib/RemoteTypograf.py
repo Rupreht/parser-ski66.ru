@@ -1,8 +1,11 @@
-from urllib.parse import urlencode
-import requests, json
+""" remotetypograf """
 
-class RemoteTypograf:
-    """
+from urllib.parse import urlencode
+import json
+import requests
+
+class remotetypograf:
+    r"""
         remotetypograf.py
         python-implementation of ArtLebedevStudio.RemoteTypograf class (web-service client)
 
@@ -27,18 +30,17 @@ class RemoteTypograf:
             parser:
                 1 - текст для «Парсера»
     """
-
     _doTypa = 1
     _quote_1 = 1
     _quote_2 = 2
     _entity = 0
     _rm_tab = 0
     _spc_punct = 1
-    _afterScan = 1
+    _afterscan = 1
     _parser = 0
     _encoding = 'UTF-8'
 
-    def __init__(self, encoding='UTF-8', attr={}):
+    def __init__(self, encoding='UTF-8', attr=()):
         self._encoding = encoding
 
         if "entity" in attr:
@@ -47,12 +49,12 @@ class RemoteTypograf:
             self._rm_tab = 1
         if "spc_punct" in attr:
             self._spc_punct = 1
-        if "afterScan" in attr:
-            self._afterScan = 1
+        if "fterscan" in attr:
+            self._afterscan = 1
         if "parser" in attr:
             self._parser = 1
 
-    def processText(self, text):
+    def processtext(self, text):
         """ Text processer """
         text = text.replace('&', '&amp;')
         text = text.replace('<', '&lt;')
@@ -86,15 +88,15 @@ class RemoteTypograf:
         if self._spc_punct != 0:
             _data["spc_punct"] = self._spc_punct
 
-        if self._afterScan != 0:
-            _data["afterScan"] = self._afterScan
+        if self._afterscan != 0:
+            _data["afterScan"] = self._afterscan
 
         if self._parser != 0:
             _data["parser"] = self._parser
 
         data = urlencode(_data)
 
-        typografResponse = requests.post("https://www.artlebedev.ru/typograf/ajax.html",
-            headers=_headers, data=data)
+        typografresponse = requests.post("https://www.artlebedev.ru/typograf/ajax.html",
+            headers=_headers, data=data, timeout=5)
 
-        return json.loads(typografResponse.text)["typographed"]
+        return json.loads(typografresponse.text)["typographed"]
