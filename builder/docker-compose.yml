@@ -13,3 +13,8 @@ services:
 
 volumes:
   data:
+
+networks:
+  frontend:
+    external:
+      name: frontend
