@@ -1,12 +1,12 @@
-beautifulsoup4>=4.11.1
-lxml>=4.9.1
-requests>=2.28.1
-aiogram
-# PyMuPDF
+uWSGI
 Flask
 Flask-Login
 SQLAlchemy
 Flask-SQLAlchemy
 Flask-WTF
 Flask-Migrate
-uWSGI
+beautifulsoup4>=4.11.1
+lxml>=4.9.1
+requests>=2.28.1
+aiogram
+# PyMuPDF
