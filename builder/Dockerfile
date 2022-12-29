@@ -7,7 +7,7 @@ RUN apt-get update && \
 	&& addgroup --gid 1001 --system app \
 	&& adduser --shell /bin/false \
 		--disabled-password --uid 1001 --system --group app \
-	&& git clone https://github.com/Rupreht/parser-ski66.ru.git . \
+	&& git clone --branch dev --depth 1 https://github.com/Rupreht/parser-ski66.ru.git . \
 	&& mkdir data && chown app:app data \
 	&& pip install -U pip \
 	&& pip install -r requirements.txt \
