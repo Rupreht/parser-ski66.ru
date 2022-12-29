@@ -1,16 +1,22 @@
 """
-    main.py
+    routers.py
 """
 
 from flask import Blueprint, render_template, request, url_for, flash, redirect
 from flask_login import login_required, current_user
+from flask import current_app as app
 from .models import Post
-from . import db, date_format
+from app import db
 
-main = Blueprint('main', __name__)
+# Blueprint Configuration
+main = Blueprint(
+    'main', __name__,
+    template_folder='templates',
+    static_folder='static'
+)
 
 @main.route('/', methods=['GET'])
-@main.route('/index', methods=['GET'])
+# @main.route('/index', methods=['GET'])
 def index():
     """ Index Page """
     page = request.args.get('page', 1, type=int)
@@ -89,6 +95,3 @@ def delete(id):
 @login_required
 def profile():
     return render_template('profile.html', user=current_user)
-
-if __name__ == '__main__':
-    main.run(debug=True, host='0.0.0.0')

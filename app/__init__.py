@@ -7,7 +7,7 @@ from flask_login import LoginManager
 from flask_wtf.csrf import CSRFProtect
 from flask_migrate import Migrate
 
-basedir = os.path.abspath(os.path.dirname(__file__) + '/../')
+BASEDIR = os.path.abspath(os.path.dirname(__file__) + '/../')
 
 date_format = '%d %B %Y %H:%M'
 
@@ -20,10 +20,10 @@ def create_app():
     """ Init App """
 
     from .models import User
-    from .auth import auth as auth_blueprint
-    from .main import main as main_blueprint
+    from . import auth as auth_blueprint
+    from .posts import routes as main_blueprint
 
-    app = Flask(__name__)
+    app = Flask(__name__, instance_relative_config=False)
     locale.setlocale(locale.LC_ALL, os.getenv('LANGUAGE', 'ru_RU'))
     csrf.init_app(app)
 
@@ -34,14 +34,10 @@ def create_app():
     app.config['ASSETS_DEBUG'] = True
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SQLALCHEMY_DATABASE_URI'] =  'sqlite:///' +\
-        os.path.join(basedir, os.getenv('SQLALCHEMY_DATABASE'))
+        os.path.join(BASEDIR, os.getenv('SQLALCHEMY_DATABASE'))
     app.config['TIMEZONE'] = os.getenv("TZ")
     # tz = timezone(app.config['TIMEZONE'])
     # data_updated_time = datetime.datetime.now().strftime(app.date_format)
-
-
-    db.init_app(app)
-    migrate.init_app(app, db)
 
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'
@@ -54,9 +50,12 @@ def create_app():
         return User.query.get(int(user_id))
 
     # blueprint for auth routes in our app
-    app.register_blueprint(auth_blueprint)
+    app.register_blueprint(auth_blueprint.auth)
 
     # blueprint for non-auth parts of app
-    app.register_blueprint(main_blueprint)
+    app.register_blueprint(main_blueprint.main)
+
+    db.init_app(app)
+    migrate.init_app(app, db)
 
     return app

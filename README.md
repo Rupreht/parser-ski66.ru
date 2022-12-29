@@ -38,5 +38,5 @@ db.session.commit()
 ## uWSGI
 
 ```sh
-uwsgi --http 0.0.0.0:5000 --wsgi-file app/main.py --callable app --stats 0.0.0.0:5001
+uwsgi --http 0.0.0.0:5000 --wsgi-file WSGI.py --callable app --stats 0.0.0.0:5001
 ```
