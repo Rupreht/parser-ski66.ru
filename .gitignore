@@ -1,8 +1,9 @@
-.vscode
-/data/
-ski66.ru-store-cookie.txt
 .python-version
-src/test*.py
+.vscode
 .env
 *.pyc
 .DS_Store
+src/test*.py
+db.sqlite
+/data/
+/*.txt
