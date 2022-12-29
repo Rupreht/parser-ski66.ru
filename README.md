@@ -34,3 +34,9 @@ new_user = models.User(email=getenv("USER_LOGIN"), username=getenv("USER_NAME"),
 db.session.add(new_user)
 db.session.commit()
 ```
+
+## uWSGI
+
+```sh
+uwsgi --http 0.0.0.0:80 --wsgi-file app/main.py --callable app --stats 0.0.0.0:81
+```
