@@ -54,3 +54,6 @@ class Post(db.Model):
 
     def set_sity(self, sity):
         self.sity = sity
+
+    def set_forward(self, forward):
+        self.forward = forward

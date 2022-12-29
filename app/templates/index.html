@@ -7,21 +7,37 @@
     {% if next_url %}<a href="{{ next_url }}">Next</a>{% endif %}
 
     {% for post in posts %}
-        <a href="{{ url_for('main.post', post_id=post['id']) }}">
-            <h2>{{ post['title'] }}</h2>
-        </a>
+        {% if current_user.is_authenticated and current_user.id == post.ovner %}
+            <a href="{{ url_for('main.edit', id=post['id']) }}">
+                <h2>{{ post['title'] }}</h2>
+            </a>
+        {% else %}
+            <a href="{{ url_for('main.post', post_id=post['id']) }}">
+                <h2>{{ post['title'] }}</h2>
+            </a>
+        {% endif %}
+
+        <span class="badge badge-primary">{{ post.pub_date.strftime('%d %B %Y') }}</span>
 
         {% if current_user.is_authenticated and current_user.id == post.ovner %}
         <a href="{{ url_for('main.edit', id=post['id']) }}">
             <span class="badge badge-warning">Edit</span>
         </a>
+        <a href="{{ url_for('main.delete', id=post['id']) }}"
+            onclick="return confirm('Are you sure you want to delete this post?')">
+            <span class="badge badge-danger">Delete</span>
+        </a>
         {% endif %}
 
-        <span class="badge badge-primary">{{ post.pub_date.strftime('%d %B %Y') }}</span>
+        {% if post['forward'] %}
+        <span class="badge badge-success">Pub is: Да</span>
+        {% else %}
+        <span class="badge badge-info">Pub is: Нет</span>
+        {% endif %}
+
+        <span class="badge">{{ post['sity'] }}</span>
 
         <span class="badge">{{ post['id'] }}</span>
-        <span class="badge">{{ post['sity'] }}</span>
-        <span class="badge">{{ post['forward'] }}</span>
 
         <hr>
     {% endfor %}

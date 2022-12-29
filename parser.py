@@ -7,13 +7,14 @@ import aiogram.utils.markdown as fmt
 
 # Dependent modules.
 import requests
+import app
 from bs4 import BeautifulSoup
 
-from app import db, create_app
+# from app import db, create_app
 from app.src.lib.common import add_utm_tracking
 from app.models import Post
 
-_app = create_app()
+_app = app.create_app()
 _app.app_context().push()
 
 ADDON_VALUE_DICT = {
@@ -135,8 +136,9 @@ def get_events() -> None:
             post.set_pub_date(new_object_dict['date'])
             post.set_sity(new_object_dict['sity'])
 
-            db.session.add(post)
-            db.session.commit()
+            app.db.session.add(post)
+            app.db.session.commit()
+            print(f"Save new post: {post.title}\n")
 
             # import sys
             # sys.exit()
@@ -162,7 +164,7 @@ def get_add_info(data_id, new_object_dict):
 
     # values : "Описание:" "Контакты:" "Протоколы:" "Фото:" "Впечатления:"
     req = requests.post("http://ski66.ru/app/cal",
-        headers=headers, data=[('descr_id', data_id)])
+        headers=headers, data=[('descr_id', data_id)], timeout=5)
     soup = BeautifulSoup(req.text.replace("\n", " "), "lxml")
     rdesc = soup.find_all(["h4", "a"])
 

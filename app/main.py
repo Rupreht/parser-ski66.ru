@@ -56,6 +56,10 @@ def edit(id):
             title = request.form['title']
             content = request.form['content']
             pub_date = request.form['pub_date']
+            if 'forward' in request.form:
+                forward  = True
+            else:
+                forward  = False
 
             if not title:
                 flash('Title is required!')
@@ -63,6 +67,7 @@ def edit(id):
                 post.set_title(title)
                 post.set_content(content)
                 post.set_pub_date(pub_date)
+                post.set_forward(forward)
                 db.session.commit()
                 return redirect(url_for('main.index'))
     else:
@@ -70,7 +75,7 @@ def edit(id):
 
     return render_template('edit.html', post=post)
 
-@main.route('/<int:id>/delete', methods=('POST',))
+@main.route('/<int:id>/delete', methods=('POST','GET'))
 @login_required
 def delete(id):
     post = Post.query.get_or_404(id)

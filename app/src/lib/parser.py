@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 """ Parser cmd """
 import sys
-from lib.parser import get_and_save_new_events
+
+def get_and_save_new_events():
+    """ get_and_save_new_events """
 
 def main():
     """ Main """
