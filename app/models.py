@@ -38,10 +38,10 @@ class Post(db.Model):
         self.ovner = ovner
 
     def __str__(self):
-        return '<Post %r>' % self.title
+        return f'Post: {self.title}'
 
     def __repr__(self):
-        return '<Post %r>' % self.title
+        return f'Post: {self.title}'
 
     def set_title(self, title):
         self.title = title
