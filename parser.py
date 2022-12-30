@@ -12,7 +12,7 @@ from bs4 import BeautifulSoup
 
 # from app import db, create_app
 from app.src.lib.common import add_utm_tracking
-from app.models import Post
+from app.posts.models import Post
 
 _app = app.create_app()
 _app.app_context().push()
