@@ -7,6 +7,10 @@ from flask_login import login_required, current_user
 from flask import current_app as app
 from .models import Post
 from app import db
+from flask_paginate import Pagination
+
+DATE_FORMAT = '%d %B %Y %H:%M'
+PER_PAGE = 15
 
 # Blueprint Configuration
 main = Blueprint(
@@ -20,19 +24,25 @@ main = Blueprint(
 def index():
     """ Index Page """
     page = request.args.get('page', 1, type=int)
-    posts = Post.query.order_by(Post.pub_date.asc()).paginate(page, 15, False)
-    next_url = url_for('main.index', page=posts.next_num) \
-        if posts.has_next else None
-    prev_url = url_for('main.index', page=posts.prev_num) \
-        if posts.has_prev else None
+    posts = Post.query.order_by(Post.pub_date.asc()).paginate(page, PER_PAGE, False)
+
+    pagination = Pagination(
+        page=page,
+        per_page=PER_PAGE,
+        total=posts.total,
+        record_name="posts",
+        format_total=True,
+        format_number=True,
+    )
 
     return render_template('index.html', posts=posts.items,
-                           next_url=next_url, prev_url=prev_url)
+                           pagination=pagination)
 
 @main.route('/<int:post_id>')
 def post(post_id):
     post = Post.query.filter_by(id=post_id).first_or_404()
-    return render_template('post.html', post=post, last_modified = post.last_modified.strftime(date_format))
+    return render_template('post.html', post=post,
+                           last_modified = post.last_modified.strftime(DATE_FORMAT))
 
 @main.route('/create', methods=('GET', 'POST'))
 @login_required
