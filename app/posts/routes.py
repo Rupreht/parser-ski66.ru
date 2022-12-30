@@ -16,11 +16,12 @@ main = Blueprint(
 )
 
 @main.route('/', methods=['GET'])
+@main.route('/<int:page>', methods = ['GET'])
 # @main.route('/index', methods=['GET'])
 def index():
     """ Index Page """
     page = request.args.get('page', 1, type=int)
-    posts = Post.query.order_by(Post.pub_date.asc()).paginate(page, 15, False)
+    posts = Post.query.order_by(Post.pub_date.asc()).paginate(page, 15, True)
     next_url = url_for('main.index', page=posts.next_num) \
         if posts.has_next else None
     prev_url = url_for('main.index', page=posts.prev_num) \
