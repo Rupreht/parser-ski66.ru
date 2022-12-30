@@ -56,7 +56,7 @@ def create():
 def edit(id):
     post = db.session.get(Post, id)
 
-    if current_user.id == post.ovner:
+    if current_user.id <= post.ovner:
 
         if request.method == 'POST':
             title = request.form['title']
@@ -85,7 +85,7 @@ def edit(id):
 @login_required
 def delete(id):
     post = Post.query.get_or_404(id)
-    if current_user.id == post.ovner:
+    if current_user.id <= post.ovner:
         db.session.delete(post)
         db.session.commit()
         flash('"{}" was successfully deleted!'.format(post))

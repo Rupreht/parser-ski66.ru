@@ -130,7 +130,7 @@ def get_events() -> None:
             post = Post(
                 title = f"{new_object_dict['src_date']} {new_object_dict['description']}-{data_id}",
                 content  = text,
-                ovner = 1
+                ovner = 2000
                 )
 
             post.set_pub_date(new_object_dict['date'])

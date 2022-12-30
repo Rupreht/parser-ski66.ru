@@ -7,7 +7,7 @@
     {% if next_url %}<a href="{{ next_url }}">Next</a>{% endif %}
 
     {% for post in posts %}
-        {% if current_user.is_authenticated and current_user.id == post.ovner %}
+        {% if current_user.is_authenticated and current_user.id <= post.ovner %}
             <a href="{{ url_for('main.edit', id=post['id']) }}">
                 <h4>{{ post['title'] }}</h4>
             </a>
@@ -25,7 +25,7 @@
 
         <span class="badge badge-primary col-2">{{ post.pub_date.strftime('%d %B %Y') }}</span>
 
-        {% if current_user.is_authenticated and current_user.id == post.ovner %}
+        {% if current_user.is_authenticated and current_user.id <= post.ovner %}
         <a href="{{ url_for('main.edit', id=post['id']) }}">
             <span class="badge badge-success col-2">Edit</span>
         </a>
