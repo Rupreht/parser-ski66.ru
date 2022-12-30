@@ -1,0 +1,6 @@
+{
+    "executionEnvironments": [
+        {"root": "app"}
+    ],
+    "reportMissingImports": false,
+}

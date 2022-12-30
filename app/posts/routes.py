@@ -4,7 +4,6 @@
 
 from flask import Blueprint, render_template, request, url_for, flash, redirect
 from flask_login import login_required, current_user
-from flask import current_app as app
 from .models import Post
 from app import db
 from flask_paginate import Pagination
