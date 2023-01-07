@@ -4,15 +4,13 @@ from time import sleep
 import random
 from datetime import datetime
 import aiogram.utils.markdown as fmt
-
-# Dependent modules.
 import requests
-import app
 from bs4 import BeautifulSoup
 
 # from app import db, create_app
-from app.src.lib.common import add_utm_tracking
-from app.posts.models import Post
+# from app.src.lib.common import add_utm_tracking
+# from app.posts.models import Post
+import app
 
 _app = app.create_app()
 _app.app_context().push()
@@ -45,7 +43,7 @@ def print_links_to_cols(array, text) -> str:
     count = 1
     size = len(array)
     for key in array:
-        text += fmt.link(key, add_utm_tracking(array[key], utm_params))
+        text += fmt.link(key, app.src.lib.common.add_utm_tracking(array[key], utm_params))
         if count % 2 == 0:
             text += fmt.text('', '\n')
         elif size != count:
@@ -80,7 +78,7 @@ def get_events() -> None:
             event_name = descdescript = re.sub(' +', ' ', tds[1].text.strip())
             fdate = datetime.strptime(date.split()[1].strip("-"), '%d-%m-%Y').strftime('%Y-%m-%d')
 
-            post = Post.query.filter_by(title = f"{date} {descdescript}-{data_id}").first()
+            post = app.posts.models.Post.query.filter_by(title = f"{date} {descdescript}-{data_id}").first()
 
             if post is not None:
                 continue
@@ -122,12 +120,12 @@ def get_events() -> None:
                 fmt.text('', '\n'),
                 fmt.link("@SkiUral", "https://t.me/SkiUral"),
                 fmt.escape_md(" | "),
-                fmt.link('ski66©', add_utm_tracking('http://ski66.ru', utm_params)),
+                fmt.link('ski66©', app.src.lib.common.add_utm_tracking('http://ski66.ru', utm_params)),
                 fmt.text('', '\n')
                 )
 
 
-            post = Post(
+            post = app.posts.models.Post(
                 title = f"{new_object_dict['src_date']} {new_object_dict['description']}-{data_id}",
                 content  = text,
                 ovner = 2000
