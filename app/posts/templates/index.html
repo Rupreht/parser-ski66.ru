@@ -11,36 +11,30 @@
         <div class="container-fluid border border-secondary rounded p-3 m-1">
         {% if current_user.is_authenticated and current_user.id <= post.ovner %}
             <a href="{{ url_for('main.edit', id=post['id']) }}">
-                <h4>{{ post['title'] }}</h4>
-            </a>
         {% else %}
             <a href="{{ url_for('main.post', post_id=post['id']) }}">
-                <h4>{{ post['title'] }}</h4>
-            </a>
         {% endif %}
+                <span class="text-capitalize font-weight-bold">{{ post['title'] }}</span>
+            </a>
 
-        <blockquote class="blockquote">
-            <p class="mb-0">
-                {{ post['sity'] }}
-            </p>
-        </blockquote>
+            <p class="mb-0">{{ post['sity'] }}</p>
 
-        <span class="badge badge-primary col-2">{{ post.pub_date.strftime('%d %B %Y') }}</span>
+            <span class="badge badge-primary col-2">{{ post.pub_date.strftime('%d %B %Y') }}</span>
 
         {% if current_user.is_authenticated and current_user.id <= post.ovner %}
-        <a href="{{ url_for('main.edit', id=post['id']) }}">
-            <span class="badge badge-success col-2">Edit</span>
-        </a>
-        <a href="{{ url_for('main.delete', id=post['id']) }}"
-            onclick="return confirm('Are you sure you want to delete this post?')">
-            <span class="badge badge-danger col-1">Delete</span>
-        </a>
+            <a href="{{ url_for('main.edit', id=post['id']) }}">
+                <span class="badge badge-success col-2">Edit</span>
+            </a>
+            <a href="{{ url_for('main.delete', id=post['id']) }}"
+                onclick="return confirm('Are you sure you want to delete this post?')">
+                <span class="badge badge-danger col-1">Delete</span>
+            </a>
         {% endif %}
 
         {% if post['forward'] %}
-        <span class="badge badge-success col-1">Да</span>
+            <span class="badge badge-success col-1">Да</span>
         {% else %}
-        <span class="badge badge-light col-1">Нет</span>
+            <span class="badge badge-light col-1">Нет</span>
         {% endif %}
 
         </div>
