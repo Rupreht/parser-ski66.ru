@@ -22,7 +22,10 @@ main = Blueprint(
 def index():
     """ Index Page """
     page = request.args.get('page', 1, type=int)
-    posts = Post.query.order_by(Post.pub_date.asc()).paginate(page, PER_PAGE, False)
+    posts = Post.query.\
+        filter(Post.forward<2).\
+        order_by(Post.pub_date.asc()).\
+        paginate(page, PER_PAGE, False)
 
     pagination = Pagination(
         page=page,

@@ -8,7 +8,7 @@ import requests
 from bs4 import BeautifulSoup
 
 # from app import db, create_app
-# from app.src.lib.common import add_utm_tracking
+from app.src.lib.common import add_utm_tracking
 # from app.posts.models import Post
 import app
 
@@ -43,7 +43,7 @@ def print_links_to_cols(array, text) -> str:
     count = 1
     size = len(array)
     for key in array:
-        text += fmt.link(key, app.src.lib.common.add_utm_tracking(array[key], utm_params))
+        text += fmt.link(key, add_utm_tracking(array[key], utm_params))
         if count % 2 == 0:
             text += fmt.text('', '\n')
         elif size != count:
