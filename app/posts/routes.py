@@ -14,8 +14,7 @@ PER_PAGE = 15
 # Blueprint Configuration
 main = Blueprint(
     'main', __name__,
-    template_folder='templates',
-    static_folder='static'
+    template_folder='templates'
 )
 
 @main.route('/', methods=['GET'])

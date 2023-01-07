@@ -16,14 +16,14 @@ db = SQLAlchemy()
 migrate = Migrate()
 csrf = CSRFProtect()
 
-def create_app():
+def create_app(test_config=None):
     """ Init App """
 
     from .models import User
     from . import auth as auth_blueprint
     from .posts import routes as main_blueprint
 
-    app = Flask(__name__, instance_relative_config=False)
+    app = Flask(__name__, instance_relative_config=True)
     locale.setlocale(locale.LC_ALL, os.getenv('LANGUAGE', 'ru_RU'))
     csrf.init_app(app)
 
@@ -32,12 +32,25 @@ def create_app():
 
     app.config.from_prefixed_env()
     app.config['ASSETS_DEBUG'] = True
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
     app.config['SQLALCHEMY_DATABASE_URI'] =  'sqlite:///' +\
         os.path.join(BASEDIR, os.getenv('SQLALCHEMY_DATABASE'))
     app.config['TIMEZONE'] = os.getenv("TZ")
     # tz = timezone(app.config['TIMEZONE'])
     # data_updated_time = datetime.datetime.now().strftime(app.date_format)
+
+    if test_config is None:
+        # load the instance config, if it exists, when not testing
+        app.config.from_pyfile("config.py", silent=True)
+    else:
+        # load the test config if passed in
+        app.config.update(test_config)
+
+    # ensure the instance folder exists
+    try:
+        os.makedirs(app.instance_path)
+    except OSError:
+        pass
 
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'

@@ -8,6 +8,7 @@
     {{ pagination.links }}
 
     {% for post in posts %}
+        <div class="container-fluid border border-secondary rounded p-3 m-1">
         {% if current_user.is_authenticated and current_user.id <= post.ovner %}
             <a href="{{ url_for('main.edit', id=post['id']) }}">
                 <h4>{{ post['title'] }}</h4>
@@ -42,8 +43,7 @@
         <span class="badge badge-light col-1">Нет</span>
         {% endif %}
 
-        <hr>
-
+        </div>
     {% endfor %}
 
     {{ pagination.links }}

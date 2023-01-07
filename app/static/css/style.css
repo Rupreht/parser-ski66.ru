@@ -1,6 +1,8 @@
+h2,h3,h4 {
+    color: #00448d;
+    padding: 10px;
+}
 h2 {
     border: 2px #eee solid;
-    color: brown;
     text-align: center;
-    padding: 10px;
 }
