@@ -6,7 +6,7 @@ import requests
 
 TOKEN = getenv('TOKEN_BOT')
 CHAT_ID = getenv('CHAT_ID')
-con = sqlite3.connect("file:data/db.sqlite?mode=rw", uri=True)
+con = sqlite3.connect("file:/app/data/db.sqlite?mode=rw", uri=True)
 cur = con.cursor()
 date_now = datetime.now().date()
 date_delta = timedelta(days=31)
