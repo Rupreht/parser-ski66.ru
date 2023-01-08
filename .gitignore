@@ -22,3 +22,4 @@ build/
 
 db.sqlite
 *.bak
+test*
