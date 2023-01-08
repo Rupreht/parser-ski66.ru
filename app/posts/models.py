@@ -1,7 +1,6 @@
 """ models.py """
 
 from datetime import datetime
-from flask_login import UserMixin
 from app import db
 
 class Post(db.Model):
@@ -42,3 +41,6 @@ class Post(db.Model):
 
     def set_forward(self, forward):
         self.forward = forward
+
+    def set_archive(self):
+        self.forward = 3
