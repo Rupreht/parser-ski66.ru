@@ -4,6 +4,18 @@ WORKDIR /app
 
 RUN set -eux; \
 	apk add --no-cache git \
+		mupdf-dev \
+		gcc \
+		g++ \
+		make \
+		libc-dev \
+		python3-dev \
+		musl-dev \
+		jbig2dec \
+		openjpeg-dev \
+		jpeg-dev \
+		harfbuzz-dev \
+		swig \
 	&& addgroup --gid 1001 --system app \
 	&& adduser --shell /bin/false \
 		--disabled-password --uid 1001 --system app app
