@@ -24,13 +24,11 @@ RUN git clone --branch dev --depth 1 https://github.com/Rupreht/parser-ski66.ru.
 	&& mkdir data && chown app:app data \
     && pip install -U pip \
 	&& pip install -r requirements.txt \
-	&& rm -rf /var/cache/apk/* \
+	&& rm -rf /var/cache/apk/* /root/.cache \
 	&& ln -s /app/.crontab.file /etc/crontabs/app
 
 COPY entrypoint.sh /
 
 RUN chmod +x /entrypoint.sh
-
-# USER app:app
 
 ENTRYPOINT ["/entrypoint.sh"]

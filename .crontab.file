@@ -1,2 +1,3 @@
 10 */3 * * * python /app/parser-ski66ru.py
-0 10-21 * * * python /app/cron_tg_bot.py
+0 10-21 * * 1-5 python /app/cron_tg_bot.py
+0 12-21 * * 0,6 python /app/cron_tg_bot.py
