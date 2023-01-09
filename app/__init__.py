@@ -6,6 +6,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_wtf.csrf import CSRFProtect
 from flask_migrate import Migrate
+from flaskext.markdown import Markdown
+
 
 BASEDIR = os.path.abspath(os.path.dirname(__file__) + '/../')
 
@@ -70,5 +72,6 @@ def create_app(test_config=None):
 
     db.init_app(app)
     migrate.init_app(app, db)
+    Markdown(app)
 
     return app

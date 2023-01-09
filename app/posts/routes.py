@@ -8,6 +8,7 @@ from .models import Post
 from app import db
 from flask_paginate import Pagination
 
+
 DATE_FORMAT = '%d %B %Y %H:%M'
 PER_PAGE = 15
 
