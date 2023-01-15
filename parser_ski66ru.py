@@ -6,14 +6,14 @@ import re
 from time import sleep
 import random
 from datetime import datetime
+from hashlib import sha1
 import aiogram.utils.markdown as fmt
 import requests
 from bs4 import BeautifulSoup
-# from app import db, create_app
 from app.src.lib.common import add_utm_tracking
-# from app.posts.models import Post
 import app
-
+from app.posts.models import Post
+from app import db
 
 _app = app.create_app()
 _app.app_context().push()
@@ -79,11 +79,8 @@ def get_events() -> None:
             data_id = tds[1]["data-id"]
             event_name = descdescript = re.sub(' +', ' ', tds[1].text.strip())
             fdate = datetime.strptime(date.split()[1].strip("-"), '%d-%m-%Y').strftime('%Y-%m-%d')
-
-            post = app.posts.models.Post.query.filter_by(title = f"{date} {descdescript}-{data_id}").first()
-
-            if post is not None:
-                continue
+            post_edit = False
+            post = Post.query.filter_by(title = f"{date} {descdescript}-{data_id}").first()
 
             new_object_dict = {
                 "description": descdescript,
@@ -99,9 +96,6 @@ def get_events() -> None:
             for item in [",", " ", "-", "'"]:
                 if item in event_name:
                     event_name = event_name.replace(item, "_")
-
-            # with open(f"data/{fdate}-{data_id}.json", "w", encoding="utf-8") as file:
-            #     json.dump(events_dict[data_id], file, indent=4, ensure_ascii=False)
 
             text = fmt.text(
                 fmt.escape_md(new_object_dict['src_date']),
@@ -122,27 +116,39 @@ def get_events() -> None:
                 fmt.text('', '\n'),
                 fmt.link("@SkiUral", "https://t.me/SkiUral"),
                 fmt.escape_md(" | "),
-                fmt.link('ski66©', app.src.lib.common.add_utm_tracking('http://ski66.ru', utm_params)),
+                fmt.link('ski66©', add_utm_tracking('http://ski66.ru', utm_params)),
                 fmt.text('', '\n')
                 )
 
-            post = app.posts.models.Post(
-                title = f"{new_object_dict['src_date']} {new_object_dict['description']}-{data_id}",
-                content  = text,
-                ovner = 2000,
-                )
+            cur_hash = sha1(bytes(text, encoding='utf8')).hexdigest()
+
+            if post is not None:
+                if post.get_hash() == cur_hash:
+                    sleep(random.randrange(3, 6))
+                    continue
+                else:
+                    post_edit = True
+
+            if post_edit:
+                post.set_content(text)
+            else:
+                post = Post(
+                    title = f"{new_object_dict['src_date']} {new_object_dict['description']}-{data_id}",
+                    content  = text,
+                    ovner = 2000,
+                    )
 
             post.set_pub_date(new_object_dict['date'])
             post.set_sity(new_object_dict['sity'])
+            post.set_mode(new_object_dict['mode'])
 
-            app.db.session.add(post)
-            app.db.session.commit()
+            if not post_edit:
+                db.session.add(post)
+            db.session.commit()
             dt_tm = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
-            print(f"{dt_tm} Save new post: {post.title}\n")
+            print(f"{dt_tm}\tid: {post.id} Save New {post}")
 
-            # import sys
-            # sys.exit()
-
+            # break
             sleep(random.randrange(3, 6))
 
 

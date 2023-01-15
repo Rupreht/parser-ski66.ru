@@ -38,6 +38,7 @@ class Post(db.Model):
 
     def set_content(self, content):
         self.content = content
+        self.hash = sha1(bytes(content, encoding='utf8')).hexdigest()
 
     def set_pub_date(self, pub_date):
         self.pub_date = datetime.fromisoformat(pub_date).replace(microsecond=0)
