@@ -15,9 +15,11 @@ res = cur.execute(f"""SELECT id, pub_date, title, content, forward
         post
     WHERE 1
         and pub_date BETWEEN '{date_now}' AND '{date_delta + date_now}'
-        and forward==1""")
+        and forward==1
+    ORDER BY pub_date ASC""")
 
 def get_request(url):
+    """ Get Request """
     try:
         req = requests.get(url, timeout=5)
         if req.status_code != 200:
@@ -25,7 +27,7 @@ def get_request(url):
             return False
         result = req.json()
         return result
-    except:
+    except result.JSONDecodeError:
         return False
 
 for item in res.fetchall():
