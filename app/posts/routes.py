@@ -2,11 +2,12 @@
     routers.py
 """
 
+from datetime import datetime
 from flask import Blueprint, render_template, request, url_for, flash, redirect
 from flask_login import login_required, current_user
+from flask_paginate import Pagination
 from .models import Post
 from app import db
-from flask_paginate import Pagination
 
 
 DATE_FORMAT = '%d %B %Y %H:%M'
@@ -25,6 +26,7 @@ def index():
     page = request.args.get('page', 1, type=int)
     posts = Post.query.\
         filter(Post.forward<2).\
+        filter(Post.pub_date >= datetime.now().date()).\
         order_by(Post.pub_date.asc()).\
         paginate(page, PER_PAGE, False)
 
@@ -42,6 +44,7 @@ def index():
 
 @main.route('/<int:post_id>')
 def post(post_id):
+    """ Show Post """
     post = Post.query.filter_by(id=post_id).first_or_404()
     return render_template('post.html', post=post,
                            last_modified = post.last_modified.strftime(DATE_FORMAT))
@@ -49,6 +52,7 @@ def post(post_id):
 @main.route('/create', methods=('GET', 'POST'))
 @login_required
 def create():
+    """ Create new Post """
     if request.method == 'POST':
         title = request.form['title']
         content = request.form['content']
@@ -66,6 +70,7 @@ def create():
 @main.route('/<int:id>/edit', methods=('GET', 'POST'))
 @login_required
 def edit(id):
+    """ Edit Post """
     post = db.session.get(Post, id)
 
     if current_user.id <= post.ovner:
@@ -96,6 +101,7 @@ def edit(id):
 @main.route('/<int:id>/delete', methods=('POST','GET'))
 @login_required
 def delete(id):
+    """ Delete Post """
     post = Post.query.get_or_404(id)
     if current_user.id <= post.ovner:
         db.session.delete(post)
@@ -106,4 +112,5 @@ def delete(id):
 @main.route('/profile')
 @login_required
 def profile():
+    """ Show Profile curent User """
     return render_template('profile.html', user=current_user)
