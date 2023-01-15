@@ -13,7 +13,7 @@ CHAT_ID = getenv('CHAT_ID')
 con = sqlite3.connect("file:/app/data/db.sqlite?mode=rw", uri=True)
 cur = con.cursor()
 date_now = datetime.now().date()
-date_delta = timedelta(days=31)
+date_delta = timedelta(days=10)
 res = cur.execute(f"""SELECT id, pub_date, title, content, forward
     FROM
         post
