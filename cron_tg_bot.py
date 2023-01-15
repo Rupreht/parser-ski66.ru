@@ -1,8 +1,12 @@
-""" cron tg bot """
+"""
+    cron TG Bot
+"""
+
 from os import getenv
 import sqlite3
 from datetime import datetime, timedelta
 import requests
+
 
 TOKEN = getenv('TOKEN_BOT')
 CHAT_ID = getenv('CHAT_ID')
