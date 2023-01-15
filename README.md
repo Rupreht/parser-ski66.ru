@@ -18,9 +18,10 @@ echo USER_PASSWD=.... >> .env
 echo CHAT_ID=.... >> .env
 ```
 
-## Flask
+## Flask deploy
 
 ```sh
+flask db upgrade
 flask shell
 ```
 
