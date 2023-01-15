@@ -10,10 +10,10 @@ import requests
 
 TOKEN = getenv('TOKEN_BOT')
 CHAT_ID = getenv('CHAT_ID')
-con = sqlite3.connect("file:/app/data/db.sqlite?mode=rw", uri=True)
+con = sqlite3.connect(getenv('TG_DB'), uri=True)
 cur = con.cursor()
 date_now = datetime.now().date()
-date_delta = timedelta(days=10)
+date_delta = timedelta(days=14)
 res = cur.execute(f"""SELECT id, pub_date, title, content, forward
     FROM
         post
