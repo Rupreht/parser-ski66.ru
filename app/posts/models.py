@@ -1,10 +1,12 @@
 """ models.py """
 
 from datetime import datetime
+from hashlib import sha1
 from app import db
 
+
 class Post(db.Model):
-    """ class Post """
+    """ Class Post """
     id            = db.Column(db.Integer, primary_key=True)
     ovner         = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     forward       = db.Column(db.Boolean, unique=False, default=False, nullable=False)
@@ -15,11 +17,15 @@ class Post(db.Model):
     sity          = db.Column(db.String(80), default='', nullable=False)
     content       = db.Column(db.Text, default='', nullable=False)
     typograf      = db.Column(db.Text, default='', nullable=False)
+    hash          = db.Column(db.String(40), default='', nullable=False)
+    pub           = db.Column(db.Boolean, unique=False, default=False, nullable=False)
+    mode          = db.Column(db.String(80), default='', nullable=False)
 
     def __init__(self, title, content, ovner) -> None:
         self.title = title
         self.content = content
         self.ovner = ovner
+        self.hash = self.get_hash()
 
     def __str__(self):
         return f'Post: {self.title}'
@@ -44,3 +50,9 @@ class Post(db.Model):
 
     def set_archive(self):
         self.forward = 3
+
+    def get_hash(self):
+        return sha1(bytes(self.content, encoding='utf8')).hexdigest()
+
+    def set_mode(self, mode):
+        self.mode = mode

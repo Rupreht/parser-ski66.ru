@@ -71,7 +71,7 @@ def create_app(test_config=None):
     app.register_blueprint(main_blueprint.main)
 
     db.init_app(app)
-    migrate.init_app(app, db)
+    migrate.init_app(app, db, render_as_batch=False, compare_type=True)
     Markdown(app)
 
     return app
