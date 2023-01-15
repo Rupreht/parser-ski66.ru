@@ -136,7 +136,8 @@ def get_events() -> None:
 
             app.db.session.add(post)
             app.db.session.commit()
-            print(f"Save new post: {post.title}\n")
+            dt_tm = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+            print(f"{dt_tm} Save new post: {post.title}\n")
 
             # import sys
             # sys.exit()
