@@ -1,4 +1,7 @@
-"""System modules."""
+"""
+    System modules.
+"""
+
 import re
 from time import sleep
 import random
@@ -6,11 +9,11 @@ from datetime import datetime
 import aiogram.utils.markdown as fmt
 import requests
 from bs4 import BeautifulSoup
-
 # from app import db, create_app
 from app.src.lib.common import add_utm_tracking
 # from app.posts.models import Post
 import app
+
 
 _app = app.create_app()
 _app.app_context().push()
@@ -52,7 +55,6 @@ def print_links_to_cols(array, text) -> str:
             text += fmt.text('', '\n')
         count += 1
     return text
-
 
 def get_events() -> None:
     """
@@ -124,11 +126,10 @@ def get_events() -> None:
                 fmt.text('', '\n')
                 )
 
-
             post = app.posts.models.Post(
                 title = f"{new_object_dict['src_date']} {new_object_dict['description']}-{data_id}",
                 content  = text,
-                ovner = 2000
+                ovner = 2000,
                 )
 
             post.set_pub_date(new_object_dict['date'])
@@ -143,8 +144,6 @@ def get_events() -> None:
             # sys.exit()
 
             sleep(random.randrange(3, 6))
-
-    return None
 
 
 def get_add_info(data_id, new_object_dict):
